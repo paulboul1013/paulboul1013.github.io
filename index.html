@@ -103,7 +103,7 @@
     <div class="hole"><div class="mole"><img src="mole.png" alt="地鼠"></div></div>
   </div>
   <h2>歷史排名榜</h2>
-  <ol id="leaderboard"></ol>
+  <div id="leaderboard"></div>
   <script>
     const holes = document.querySelectorAll('.hole');
     const scoreBoard = document.getElementById('score');
@@ -157,13 +157,14 @@
 
     function getHistoryScores() {
       const scores = JSON.parse(localStorage.getItem('mole_scores') || '[]');
-      return scores;
+      // 過濾掉舊格式（純數字）紀錄
+      return scores.filter(item => typeof item === 'object' && item !== null && 'name' in item && 'score' in item);
     }
 
-    function saveScore(newScore) {
+    function saveScore(newScoreObj) {
       const scores = getHistoryScores();
-      scores.push(newScore);
-      scores.sort((a, b) => b - a);
+      scores.push(newScoreObj);
+      scores.sort((a, b) => b.score - a.score);
       const topScores = scores.slice(0, 5);
       localStorage.setItem('mole_scores', JSON.stringify(topScores));
       return topScores;
@@ -173,17 +174,24 @@
       const scores = getHistoryScores();
       leaderboard.innerHTML = '';
       if (scores.length === 0) {
-        leaderboard.innerHTML = '<li>暫無紀錄</li>';
+        leaderboard.innerHTML = '<div>暫無紀錄</div>';
       } else {
-        scores.forEach((score, idx) => {
-          const li = document.createElement('li');
-          li.textContent = `第${idx + 1}名：${score} 分`;
-          leaderboard.appendChild(li);
-        });
+        leaderboard.innerHTML = scores.map((item, idx) => {
+          const name = item.name || '匿名';
+          const score = (typeof item.score === 'number') ? item.score : 0;
+          return `第${idx + 1}名：${name}（${score} 分）`;
+        }).join('<br>');
       }
     }
 
+    let playerName = '';
     function startGame() {
+      playerName = '';
+      while (!playerName) {
+        playerName = prompt('請輸入你的名字：');
+        if (playerName === null) return; // 按取消就不開始
+        playerName = playerName.trim();
+      }
       score = 0;
       scoreBoard.textContent = '分數：0';
       gameActive = true;
@@ -194,9 +202,9 @@
         clearTimeout(moleTimeout);
         holes.forEach(hole => hole.classList.remove('active'));
         startBtn.disabled = false;
-        const topScores = saveScore(score);
+        const topScores = saveScore({ name: playerName, score });
         renderLeaderboard();
-        alert(`遊戲結束！你的分數是：${score}`);
+        alert(`遊戲結束！${playerName} 的分數是：${score}`);
       }, 20000); // 20秒
     }
 
