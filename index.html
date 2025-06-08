@@ -74,6 +74,17 @@
     #startBtn:active {
       background: #e65100;
     }
+    .mole.shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-2px, 2px) rotate(-5deg); }
+      40% { transform: translate(2px, -2px) rotate(5deg); }
+      60% { transform: translate(-2px, 2px) rotate(-5deg); }
+      80% { transform: translate(2px, -2px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
   </style>
 </head>
 <body>
@@ -134,6 +145,11 @@
         if (hole.classList.contains('active') && gameActive) {
           score++;
           scoreBoard.textContent = `分數：${score}`;
+          // 晃動動畫
+          const mole = hole.querySelector('.mole');
+          mole.classList.remove('shake');
+          void mole.offsetWidth; // 觸發 reflow 以重新啟動動畫
+          mole.classList.add('shake');
           hole.classList.remove('active');
         }
       });
