@@ -219,6 +219,21 @@ void merge(vector<int> &arr,int left,int mid,int right){
 }
 
 //hybrid merge-insertion sort
+void hybrid_sort(vector<int>&arr,int left,int right,int k){
+    if (right-left+1<=k){
+        insertionsort(arr,left,right);
+        return;
+    }
+    
+    int mid=left+(right-left)/2;
+    hybrid_sort(arr,left,mid,k);
+    hybrid_sort(arr,mid+1,right,k);
+    merge(arr,left,mid,right);
+}
+
+void hybrid_merge_sort(vector<int> &arr,int k){
+    hybrid_sort(arr,0,arr.size()-1,k);
+}
 
 
 int main(){
@@ -229,13 +244,24 @@ int main(){
     string word = "abcdefghij";
     vector<int> arr = {-2,-1,-1,1,2,3};
     vector<int> arr2 = {2, 4, -22, 10, 2, 3, 1, 5, 20};
-        vector<int> A = {5, 2, 9, 1, 6, 3};
+    vector<int> data = {38, 27, 43, 3, 9, 82, 10};
+    int k=16;
 
-    vector<int> ans=two_sum(arr,-2);
-
-    for (int x:ans){
-        cout<<x<<" ";
+    
+    for(int num:data){
+        cout<<num<<" ";
     }
+
+    cout<<endl;
+
+    hybrid_merge_sort(data,k);
+
+    for(int num:data){
+        cout<<num<<" ";
+    }
+
+
+    
     cout<<endl;
 
 
