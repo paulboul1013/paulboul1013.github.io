@@ -246,6 +246,28 @@ void bubblesort(vector<int>&arr,int n){
     }
 }
 
+int native_polynomial_evaluation(vector<int>&arr,int x){
+    int n=arr.size();
+    int result=0;
+    for (int i=0;i<n;i++){
+        int term=arr[i];
+        for(int j=1;j<=i;j++){
+            term=term*x;
+        }
+        result+=term;
+    }
+    return result;
+}
+
+
+int horner(vector<int>&arr,int x){
+    int p=0;
+    int n=arr.size();
+    for (int i=n;i>=0;i--){
+        p=arr[i]+x*p;
+    }
+    return p;
+}
 
 int main(){
 
@@ -255,22 +277,12 @@ int main(){
     string word = "abcdefghij";
     vector<int> arr = {-2,-1,-1,1,2,3};
     vector<int> arr2 = {2, 4, -22, 10, 2, 3, 1, 5, 20};
-    vector<int> data = {38, 27, 43, 3, 9, 82, 10};
+    vector<int> data = {2, -6, 2, -1};
     int k=16;
 
+    cout<<native_polynomial_evaluation(data,3)<<endl;
+    cout<<horner(data,3)<<endl;
     
-    for(int num:data){
-        cout<<num<<" ";
-    }
-
-    cout<<endl;
-
-    bubblesort(data,data.size());
-
-    for(int num:data){
-        cout<<num<<" ";
-    }
-
 
     
     cout<<endl;
