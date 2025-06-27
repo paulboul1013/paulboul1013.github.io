@@ -269,6 +269,71 @@ int horner(vector<int>&arr,int x){
     return p;
 }
 
+int horner2(vector<int>&arr,int x){
+    int p=0;
+    int n=arr.size();
+    for (int i=n;i>=0;i-=(i+1)){
+        p=arr[i]+x*p;
+    }
+    return p;
+}
+
+long long mergeandcount(vector<int>&arr,int p,int q,int r){
+    int n1=q-p+1;
+    int n2=r-q;
+
+    vector<int> left(n1+1);
+    vector<int> right(n2+1);
+
+    for(int i=0;i<n1;i++){
+        left[i]=arr[p+i];
+    }
+    for(int j=0;j<n2;j++){
+        right[j]=arr[q+1+j];
+    }
+    
+    left[n1]=INT_MAX;
+    right[n2]=INT_MAX;
+
+    int i=0,j=0,k=p;
+    long long inversions=0;
+    
+    while (i<n1 && j<n2){
+        if (left[i]<=right[j]){
+            arr[k++]=left[i++];
+        }else{
+            arr[k++]=right[j++];
+            // Count inversions: all remaining elements in Left are greater
+            inversions+=(n1-i);
+        }
+    }
+
+    //copy remaining elements of left[],if any
+    while (i<n1){
+        arr[k++]=left[i++];
+    }
+    
+    //copy remaining elements of right[],if any
+    while (j<n2){
+        arr[k++]=right[j++];
+    }
+
+    return inversions;
+}
+
+long long count_inversions(vector<int>&arr,int l,int r){
+    if (l<r){
+        int mid=l+(r-l)/2;
+        long long leftinversions=count_inversions(arr,l,mid);
+        long long rightinversions=count_inversions(arr,mid+1,r);
+        long long crossinversion=mergeandcount(arr,l,mid,r);
+        return leftinversions+rightinversions+crossinversion;
+    }else{
+        return 0;
+    }
+}
+
+
 int main(){
 
 
@@ -277,13 +342,13 @@ int main(){
     string word = "abcdefghij";
     vector<int> arr = {-2,-1,-1,1,2,3};
     vector<int> arr2 = {2, 4, -22, 10, 2, 3, 1, 5, 20};
-    vector<int> data = {2, -6, 2, -1};
+    vector<int> data = {2, 3, 8, 6, 1};
     int k=16;
+    vector<int> A = {2, 3, 8, 6, 1};
 
-    cout<<native_polynomial_evaluation(data,3)<<endl;
-    cout<<horner(data,3)<<endl;
-    
+    long long inversions=count_inversions(A,0,A.size()-1);
 
+    cout<<inversions<<endl;
     
     cout<<endl;
 
