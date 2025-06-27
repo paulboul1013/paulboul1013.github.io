@@ -236,6 +236,17 @@ void hybrid_merge_sort(vector<int> &arr,int k){
 }
 
 
+void bubblesort(vector<int>&arr,int n){
+    for(int i=0;i<n;i++){
+        for(int j=i+1;j<n;j++){
+            if (arr[j]<arr[i]){
+                swap(arr[j],arr[i]);
+            }
+        }
+    }
+}
+
+
 int main(){
 
 
@@ -254,7 +265,7 @@ int main(){
 
     cout<<endl;
 
-    hybrid_merge_sort(data,k);
+    bubblesort(data,data.size());
 
     for(int num:data){
         cout<<num<<" ";
