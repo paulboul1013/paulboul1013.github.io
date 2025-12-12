@@ -3,6 +3,7 @@
 
 void foo();
 
+void test();
 
 void foo2();
 
